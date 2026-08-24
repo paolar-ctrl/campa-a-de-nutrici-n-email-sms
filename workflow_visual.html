@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nurturing Master System — Mapa visual · Remote Latinos</title>
+<style>
+:root{
+  --bg:#f6f7fb; --panel:#ffffff; --ink:#1e2438; --muted:#6b7280; --line:#e6e8ef;
+  --email:#2563eb; --sms:#0d9488; --tag:#7c3aed; --ai:#6d28d9; --exit:#e11d48; --ok:#059669;
+  --p-candidates:#2563eb; --p-time:#0d9488; --p-cost:#d97706; --p-badhire:#db2777; --p-retention:#7c3aed; --p-mixed:#64748b;
+  --shadow:0 1px 2px rgba(16,24,40,.06),0 8px 24px rgba(16,24,40,.06);
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+a{color:var(--email)}
+.wrap{max-width:1280px;margin:0 auto;padding:24px 20px 80px}
+header.top{position:sticky;top:0;z-index:30;background:rgba(246,247,251,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.top .wrap{padding:16px 20px}
+h1{font-size:22px;margin:0 0 4px}
+.sub{color:var(--muted);font-size:14px;margin:0}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;align-items:center}
+.lg{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;background:var(--panel);border:1px solid var(--line);padding:5px 10px;border-radius:999px}
+.dot{width:10px;height:10px;border-radius:3px;display:inline-block}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px;border:1px solid var(--line);background:#fff}
+.section{margin-top:34px}
+.section h2{font-size:16px;letter-spacing:.02em;text-transform:uppercase;color:#374151;margin:0 0 4px}
+.section .desc{color:var(--muted);font-size:13.5px;margin:0 0 16px;max-width:820px}
+.center{display:flex;justify-content:center}
+.chip-node{cursor:pointer;transition:transform .08s ease,box-shadow .12s ease,opacity .12s}
+.chip-node:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.dim{opacity:.25;filter:grayscale(.3)}
+
+/* entry + decision */
+.entry{background:linear-gradient(180deg,#111827,#1f2937);color:#fff;border-radius:14px;padding:16px 22px;text-align:center;max-width:520px;box-shadow:var(--shadow)}
+.entry .k{font-size:12px;text-transform:uppercase;letter-spacing:.08em;opacity:.7}
+.entry .t{font-size:17px;font-weight:700;margin-top:2px}
+.entry .d{font-size:12.5px;opacity:.85;margin-top:4px}
+.connector{width:2px;height:24px;background:var(--line);margin:6px auto}
+.decision{display:inline-flex;align-items:center;gap:8px;background:#eef2ff;border:1.5px solid #c7d2fe;color:#3730a3;font-weight:700;border-radius:12px;padding:10px 18px;font-size:14px}
+
+/* branches */
+.branches{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:8px}
+.branch{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px;box-shadow:var(--shadow)}
+.branch h3{margin:0;font-size:15px;display:flex;align-items:center;gap:8px}
+.bletter{width:26px;height:26px;border-radius:8px;color:#fff;font-weight:800;display:grid;place-items:center;font-size:14px}
+.ba{background:#2563eb}.bb{background:#0891b2}.bc{background:#7c3aed}
+.branch .state{font-size:12.5px;color:var(--muted);margin:6px 0 4px}
+.entrytag{font-size:11px;font-weight:700;color:#3730a3;background:#eef2ff;border:1px solid #c7d2fe;border-radius:6px;padding:2px 7px;display:inline-block;margin-bottom:8px}
+.touch{border:1px solid var(--line);border-radius:12px;padding:10px 11px;margin-top:9px;background:#fff;position:relative}
+.touch .day{position:absolute;top:-9px;left:10px;background:#111827;color:#fff;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:999px}
+.touch .subj{font-size:13px;font-weight:650;margin:6px 0 6px;padding-left:2px}
+.line-em,.line-sms{display:flex;gap:7px;align-items:flex-start;font-size:11.5px;color:#374151;margin:3px 0}
+.ic{flex:none;width:18px;height:18px;border-radius:5px;display:grid;place-items:center;color:#fff;font-size:10px;margin-top:1px}
+.ic.em{background:var(--email)}.ic.sm{background:var(--sms)}
+.touch .foot{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;align-items:center}
+.lead{font-size:10.5px;font-weight:700;color:#334155;background:#f1f5f9;border-radius:6px;padding:2px 7px}
+.pdot{width:9px;height:9px;border-radius:50%}
+
+/* AI banner */
+.aibanner{margin-top:16px;background:linear-gradient(180deg,#f5f3ff,#faf5ff);border:1.5px solid #ddd6fe;border-radius:16px;padding:16px 18px;display:flex;gap:14px;align-items:flex-start}
+.aibanner .badge{flex:none;width:42px;height:42px;border-radius:12px;background:var(--ai);color:#fff;display:grid;place-items:center;font-size:20px}
+.aibanner h4{margin:0 0 3px;font-size:15px}
+.aibanner p{margin:0;font-size:13px;color:#4b3f6b}
+.kw{display:inline-block;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;background:#ede9fe;color:#5b21b6;border-radius:5px;padding:1px 6px;margin:2px 3px 0 0}
+
+/* phases */
+.phase{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px 16px;box-shadow:var(--shadow);margin-top:14px}
+.phase .ph-h{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:4px}
+.phase .ph-h .name{font-size:15px;font-weight:800}
+.phase .ph-h .cad{font-size:12px;color:var(--muted)}
+.phase .ph-note{font-size:12.5px;color:var(--muted);margin:2px 0 12px}
+.grid-chips{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:10px}
+.echip{border:1px solid var(--line);border-radius:11px;padding:9px 11px;background:#fff}
+.echip .top{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+.echip .wk{font-size:10.5px;font-weight:800;color:#111827;background:#f1f5f9;border-radius:6px;padding:2px 7px}
+.echip .th{font-size:12.5px;font-weight:600;line-height:1.35}
+.echip .meta{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin-top:7px}
+.src{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.03em;border-radius:5px;padding:2px 6px}
+.src.written{background:#dcfce7;color:#166534}
+.src.lib{background:#e0e7ff;color:#3730a3}
+.src.towrite{background:#fef3c7;color:#92400e}
+
+/* exits */
+.exits{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.exit{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--exit);border-radius:12px;padding:13px 14px;box-shadow:var(--shadow)}
+.exit.ok{border-left-color:var(--ok)}
+.exit .e-when{font-size:13px;font-weight:750}
+.exit .e-do{font-size:12.5px;color:#374151;margin-top:4px}
+.exit .e-next{font-size:11.5px;color:var(--muted);margin-top:6px}
+.exit .e-next b{color:#111827}
+
+/* objections */
+table.obj{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);font-size:13px}
+table.obj th,table.obj td{text-align:left;padding:11px 13px;border-bottom:1px solid var(--line);vertical-align:top}
+table.obj th{background:#f8fafc;font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:#475569}
+table.obj tr:last-child td{border-bottom:none}
+.link-node{cursor:pointer;color:var(--email);font-weight:600;text-decoration:underline;text-decoration-style:dotted}
+
+/* reference */
+.refgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow)}
+.card h4{margin:0 0 8px;font-size:14px}
+.taglist span{display:inline-block;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;background:#f1f5f9;border:1px solid var(--line);border-radius:6px;padding:2px 7px;margin:0 4px 6px 0}
+.lm{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;padding:6px 0;border-bottom:1px dashed var(--line)}
+.lm:last-child{border-bottom:none}
+.lm code{background:#ede9fe;color:#5b21b6;border-radius:5px;padding:1px 6px;font-size:11px}
+
+/* drawer */
+.overlay{position:fixed;inset:0;background:rgba(15,23,42,.45);opacity:0;pointer-events:none;transition:opacity .2s;z-index:40}
+.overlay.show{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;height:100%;width:min(560px,94vw);background:#fff;box-shadow:-12px 0 40px rgba(2,6,23,.25);transform:translateX(100%);transition:transform .24s ease;z-index:50;display:flex;flex-direction:column}
+.drawer.show{transform:none}
+.dr-head{padding:18px 20px;border-bottom:1px solid var(--line);position:sticky;top:0;background:#fff}
+.dr-head .close{position:absolute;top:14px;right:16px;border:none;background:#f1f5f9;border-radius:8px;width:32px;height:32px;font-size:18px;cursor:pointer;color:#334155}
+.dr-tag{font-size:11px;font-weight:700;color:#fff;padding:2px 9px;border-radius:999px;display:inline-block}
+.dr-title{font-size:17px;font-weight:750;margin:8px 0 2px;padding-right:36px}
+.dr-body{padding:18px 20px;overflow:auto}
+.dr-why{background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:11px 13px;font-size:13px;color:#7c5b13;margin-bottom:16px}
+.dr-why b{color:#92400e}
+.block{border:1px solid var(--line);border-radius:12px;margin-bottom:14px;overflow:hidden}
+.block .bh{display:flex;align-items:center;gap:8px;padding:9px 12px;font-size:12px;font-weight:700;color:#fff}
+.block .bh.em{background:var(--email)}.block .bh.sm{background:var(--sms)}.block .bh.ar{background:#334155}
+.block .bb2{padding:12px 14px;font-size:13.5px}
+.block .label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.03em;margin-bottom:2px}
+.block .subjline{font-weight:700;margin-bottom:8px}
+.mf{background:#fef9c3;border-radius:4px;padding:0 3px;font-family:ui-monospace,monospace;font-size:.9em}
+.pending{color:#92400e;background:#fef3c7;border:1px solid #fde68a;border-radius:10px;padding:11px 13px;font-size:13px}
+.filterbtns{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.fb{cursor:pointer;font-size:11.5px;font-weight:700;border:1px solid var(--line);background:#fff;border-radius:999px;padding:5px 11px;display:inline-flex;align-items:center;gap:6px}
+.fb.active{background:#111827;color:#fff;border-color:#111827}
+.howto{font-size:12.5px;color:var(--muted);margin-top:10px}
+@media(max-width:820px){.branches{grid-template-columns:1fr}.refgrid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <h1>🌱 Nurturing Master System — Mapa visual</h1>
+  <p class="sub">Del opt-in hasta 24 meses · 3 ramas · Semana 1 intensa + nutrición larga · Remote Latinos. <b>Haz clic en cualquier email o SMS</b> para ver el copy completo y por qué se envía.</p>
+  <div class="legend">
+    <span class="lg"><span class="dot" style="background:var(--email)"></span>Email</span>
+    <span class="lg"><span class="dot" style="background:var(--sms)"></span>SMS</span>
+    <span class="lg"><span class="dot" style="background:var(--tag)"></span>Etiqueta / Tag</span>
+    <span class="lg"><span class="dot" style="background:var(--ai)"></span>ChatGPT (IA 1:1)</span>
+    <span class="lg"><span class="dot" style="background:var(--exit)"></span>Salida</span>
+    <span class="lg" style="border-style:dashed">Dolor:</span>
+    <span class="lg"><span class="dot" style="border-radius:50%;background:var(--p-candidates)"></span>Candidatos</span>
+    <span class="lg"><span class="dot" style="border-radius:50%;background:var(--p-time)"></span>Tiempo</span>
+    <span class="lg"><span class="dot" style="border-radius:50%;background:var(--p-cost)"></span>Costo</span>
+    <span class="lg"><span class="dot" style="border-radius:50%;background:var(--p-badhire)"></span>Mala contratación</span>
+    <span class="lg"><span class="dot" style="border-radius:50%;background:var(--p-retention)"></span>Retención</span>
+  </div>
+  <div class="filterbtns" id="filters">
+    <span class="fb active" data-p="all">Ver todo</span>
+    <span class="fb" data-p="candidates"><span class="pdot" style="background:var(--p-candidates)"></span>Candidatos</span>
+    <span class="fb" data-p="time"><span class="pdot" style="background:var(--p-time)"></span>Tiempo</span>
+    <span class="fb" data-p="cost"><span class="pdot" style="background:var(--p-cost)"></span>Costo</span>
+    <span class="fb" data-p="badhire"><span class="pdot" style="background:var(--p-badhire)"></span>Mala contratación</span>
+    <span class="fb" data-p="retention"><span class="pdot" style="background:var(--p-retention)"></span>Retención</span>
+  </div>
+</div></header>
+
+<div class="wrap">
+
+  <!-- ENTRY -->
+  <div class="section">
+    <div class="center"><div class="entry">
+      <div class="k">Disparador de entrada</div>
+      <div class="t">El lead hace opt-in (deja sus datos)</div>
+      <div class="d">Desde un lead magnet o landing. Entra al workflow y NO se detiene aunque agende y no compre.</div>
+    </div></div>
+    <div class="connector"></div>
+    <div class="center"><div class="decision">◆ Decisión: ¿en qué estado está el lead?</div></div>
+  </div>
+
+  <!-- BRANCHES -->
+  <div class="section">
+    <h2>Paso 1 · Semana 1 (fase intensa · cada 2 días)</h2>
+    <p class="desc">Según su estado, el lead entra a una de 3 ramas. Cada rama tiene 4 toques (Día 1, 3, 5 y 7); cada toque es 1 email + 1 SMS el mismo día. Objetivo: agendar y provocar una respuesta sobre su mayor dolor. Al terminar, todas convergen en la nutrición larga.</p>
+    <div class="branches" id="branches"></div>
+  </div>
+
+  <!-- AI -->
+  <div class="section">
+    <div class="aibanner">
+      <div class="badge">🤖</div>
+      <div>
+        <h4>En cuanto el lead responde (email o SMS) → toma ChatGPT (conversación 1:1)</h4>
+        <p>Se <b>pausa</b> la secuencia automática, se aplica el tag <span class="kw">replied</span> + el dolor mencionado, y ChatGPT responde personalizado (usa la rama, el recurso que tomó y el dolor). Su meta: profundizar el dolor, dar valor y llevar a <span class="kw">BOOK</span>. Escala a humano si piden hablar con alguien o mencionan un caso concreto. Si la charla se enfría 7 días, el lead <b>re-entra</b> a la nutrición donde estaba.</p>
+        <p style="margin-top:8px"><b>Palabras clave que envían un link automático (auto-reply):</b>
+        <span class="kw">HIRE</span><span class="kw">CALCULA</span><span class="kw">ONBOARD</span><span class="kw">OFFBOARD</span><span class="kw">BOOK</span><span class="kw">RESCHEDULE</span><span class="kw">ASK</span><span class="kw">CANDIDATES</span><span class="kw">COST</span><span class="kw">TIME</span><span class="kw">RETENTION</span></p>
+      </div>
+    </div>
+    <div class="connector"></div>
+    <div class="center"><div class="decision" style="background:#ecfeff;border-color:#a5f3fc;color:#155e75">▼ Convergen las 3 ramas → Nutrición larga</div></div>
+  </div>
+
+  <!-- PHASES -->
+  <div class="section">
+    <h2>Paso 2 · Nutrición larga (hasta 24 meses)</h2>
+    <p class="desc">Si el lead no agendó ni compró, sigue recibiendo valor. Fase 1 y 2 van a 2 emails/semana; Fase 3 baja a 1 email/mes. Cada email lleva un dolor + un recurso gratis (nunca Case Studies) + CTA para agendar. <span class="src written" style="font-size:10px">ESCRITO</span> = copy completo listo · <span class="src lib" style="font-size:10px">BIBLIOTECA</span> = usa tu email actual · <span class="src towrite" style="font-size:10px">POR ESCRIBIR</span> = definido en calendario.</p>
+    <div id="phases"></div>
+  </div>
+
+  <!-- IA GUION POR DOLOR -->
+  <div class="section">
+    <h2>Guion de la IA por dolor</h2>
+    <p class="desc">Cuando el lead responde su dolor, la IA profundiza con 1 pregunta, <b>menciona</b> (no entrega) el caso más parecido a su nicho con su propuesta de valor, y cierra invitando a hablar con el equipo de expertos en contratación. Ofrece el recurso indicado.</p>
+    <div class="exits">
+      <div class="exit ok" style="border-left-color:var(--p-candidates)"><div class="e-when">🔍 CANDIDATES → Hire Match Test</div><div class="e-do">#107 Justin &amp; Mitchell (4 agencias, meses perdidos) · #111 Steve Alexander ("far and away the best" para wholesaling) · #93 George Grant ("todos calificados, difícil elegir").</div></div>
+      <div class="exit ok" style="border-left-color:var(--p-cost)"><div class="e-when">💰 COST → Salary Calculator</div><div class="e-do">#114 Nick Hoffman ("2 a 2.5 por cada US worker") · #71 ($5 vs $25/hr, 80% ahorro) · #113 Aaron ("you pay once, no-brainer") · #55 Darren Burch (4-5x más barato).</div></div>
+      <div class="exit ok" style="border-left-color:var(--p-time)"><div class="e-when">⏱️ TIME → Hire Match Test / Booking</div><div class="e-do">#110 Jose Olaizola ("changed my life", 20+ h/sem, 1 a 3 negocios) · #113 Aaron (hire en 1 semana) · #81 Sam JT (40+ h) · #103 Bryce ("none of my time was wasted").</div></div>
+      <div class="exit ok" style="border-left-color:var(--p-retention)"><div class="e-when">🔄 RETENTION → Onboarding Checklist</div><div class="e-do">#49 Danielle Walls (Laura promovida a Team Lead) · #112 Olivia (Stefania promovida) · #110 Jose (2 años, refirió) · #53 Russell Peach (Yousef corre el call center).</div></div>
+      <div class="exit ok" style="border-left-color:var(--p-badhire)"><div class="e-when">🛡️ BADHIRE → Hire Match Test</div><div class="e-do">Scorecard de 5 puntos. Citar #93 George Grant y #111 Steve Alexander para mostrar que el proceso filtra el riesgo antes de que veas al candidato.</div></div>
+    </div>
+  </div>
+
+  <!-- EXITS -->
+  <div class="section">
+    <h2>Salidas · qué corta la nutrición</h2>
+    <p class="desc">El workflow deja de nutrir cuando pasa algo importante y manda al lead a la secuencia correcta.</p>
+    <div class="exits">
+      <div class="exit ok"><div class="e-when">✅ Agenda una llamada</div><div class="e-do">Pausa la nutrición · tag <b>booked</b></div><div class="e-next">→ Secuencia <b>Booked Call</b> (confirmación + recordatorios)</div></div>
+      <div class="exit"><div class="e-when">📅 Agendó pero no llegó</div><div class="e-do">Reactiva · tag <b>no-show</b></div><div class="e-next">→ Vuelve a <b>Semana 1 · Rama B</b></div></div>
+      <div class="exit"><div class="e-when">💬 Asistió y no compró</div><div class="e-do">tag <b>state-attended-nosale</b></div><div class="e-next">→ Entra a <b>Semana 1 · Rama C</b></div></div>
+      <div class="exit ok"><div class="e-when">🤝 Contrata (cliente)</div><div class="e-do">Sale de TODA la nutrición · tag <b>client</b></div><div class="e-next">→ Secuencia <b>Client Onboarding</b></div></div>
+      <div class="exit"><div class="e-when">🚫 Unsubscribe / STOP</div><div class="e-do">Sale del workflow · tag <b>unsubscribed</b></div><div class="e-next">→ Fin</div></div>
+    </div>
+  </div>
+
+  <!-- OBJECTIONS -->
+  <div class="section">
+    <h2>Objeciones · dónde las trata la campaña</h2>
+    <p class="desc">Cada objeción típica tiene un email/SMS que la ataca de frente. Haz clic para ver el mensaje.</p>
+    <table class="obj">
+      <thead><tr><th>Objeción del lead</th><th>Dónde se trata</th><th>Recurso</th></tr></thead>
+      <tbody id="objbody"></tbody>
+    </table>
+  </div>
+
+  <!-- REFERENCE -->
+  <div class="section">
+    <h2>Referencia rápida</h2>
+    <div class="refgrid">
+      <div class="card">
+        <h4>🏷️ Etiquetas (tags) del sistema</h4>
+        <div class="label" style="font-size:11px;color:var(--muted)">Estado</div>
+        <div class="taglist"><span>state-optin-nocall</span><span>state-noshow</span><span>state-attended-nosale</span></div>
+        <div class="label" style="font-size:11px;color:var(--muted)">Fase</div>
+        <div class="taglist"><span>phase-week1</span><span>phase1-m1-6</span><span>phase2-m6-12</span><span>phase3-m12-24</span></div>
+        <div class="label" style="font-size:11px;color:var(--muted)">Engagement</div>
+        <div class="taglist"><span>replied</span><span>clicked</span><span>booked</span><span>no-show</span><span>client</span><span>unsubscribed</span></div>
+        <div class="label" style="font-size:11px;color:var(--muted)">Dolor (según respuesta al SMS)</div>
+        <div class="taglist"><span>pain-candidates</span><span>pain-cost</span><span>pain-time</span><span>pain-badhire</span><span>pain-retention</span></div>
+      </div>
+      <div class="card">
+        <h4>🎁 Lead magnets y palabras clave</h4>
+        <div class="lm"><span>Hire Match Test</span><code>HIRE</code></div>
+        <div class="lm"><span>Salary Calculator</span><code>CALCULA</code></div>
+        <div class="lm"><span>Onboarding Checklist</span><code>ONBOARD</code></div>
+        <div class="lm"><span>Offboarding Checklist</span><code>OFFBOARD</code></div>
+        <div class="lm"><span>Booking (agendar)</span><code>BOOK</code></div>
+        <div class="lm" style="color:#b91c1c"><span>Case Studies (NO se entrega)</span><span style="font-size:11px">solo mencionar</span></div>
+        <p class="howto">Case Studies no se envía como recurso: se menciona un caso dentro del texto. Regla de SMS: el primer SMS no lleva link; el link llega en el segundo mensaje (auto-reply) como URL cruda, solo si la persona responde la palabra clave. Links de email usan <code style="background:#ede9fe;color:#5b21b6;border-radius:4px;padding:1px 4px">?email-nurtmaster</code>, de SMS <code style="background:#ede9fe;color:#5b21b6;border-radius:4px;padding:1px 4px">?sms-nurtmaster</code>. Remitente: Omer Bloch, CEO, Remote Latinos.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- DRAWER -->
+<div class="overlay" id="overlay" onclick="closeDrawer()"></div>
+<aside class="drawer" id="drawer" aria-hidden="true">
+  <div class="dr-head">
+    <button class="close" onclick="closeDrawer()">×</button>
+    <span class="dr-tag" id="drTag">—</span>
+    <div class="dr-title" id="drTitle">—</div>
+    <div id="drMeta" style="font-size:12.5px;color:var(--muted)"></div>
+  </div>
+  <div class="dr-body" id="drBody"></div>
+</aside>
+
+<script>
+const DATA = {"A1": {"id": "A1", "kind": "week1", "timing": "Día 1", "subject": "{{first_name}}, quick question about your hiring", "preview": "You grabbed the resource, here's how to actually use it.", "body": "Hi <span class=\"mf\">{{first_name}}</span>,<br><br>Thanks for grabbing our resource. Most owners download something like this when one thing is quietly costing them: hiring is taking too long, costing too much, or the last hire didn&#x27;t work out.<br><br>So before I send you anything else, one real question: what&#x27;s your biggest challenge when hiring right now, finding qualified candidates, cost, time, or retention?<br><br>Just hit reply with a word or two. I read every response, and it lets me point you to the exact thing that will help, instead of flooding your inbox.<br><br>If you&#x27;d rather skip ahead, you can <a href=\"https://link.remotelatinos.com/widget/bookings/remotelatinos/linkedin-outreach-mkt?email-nurtmaster\" target=\"_blank\" rel=\"noopener\">grab a 15-minute slot here</a> and we&#x27;ll map it out together, no pitch.<br><br>Rooting for your growth,<br>Omer Bloch,<br>CEO, Remote Latinos", "sms": "Hi {{first_name}}, this is Omer at Remote Latinos. What's your biggest challenge when hiring right now: finding qualified candidates, cost, time, or retention? Reply CANDIDATES, COST, TIME, or RETENTION and I'll point you to what helps.", "auto": "", "pain": ["candidates", "time", "cost", "retention"], "lead": "Hire Match Test", "why": "Bienvenida. Entrega valor y hace LA pregunta que segmenta el dolor. La respuesta define el pain-tag y activa la IA.", "source": "written", "theme": "{{first_name}}, quick question about your hiring"}, "A2": {"id": "A2", "kind": "week1", "timing": "Día 3", "subject": "The 3 things that make hiring so painful", "preview": "And the 3 minute way to skip all of them.", "body": "Hi <span class=\"mf\">{{first_name}}</span>,<br><br>Most owners who reach out are stuck on one of three things: they can&#x27;t find qualified people, the process eats weeks they don&#x27;t have, or the last hire didn&#x27;t work out.<br><br>The good news: all three come from the same root, hiring without a clear system. When you know exactly which role to hire and what &quot;good&quot; looks like, the flood of unqualified resumes turns into a short list of people who already fit.<br><br>The quickest way to see this for your business is our Hire Match Test. In 3 minutes it reads your situation and tells you the exact role to hire first, and why. Reply HIRE and I&#x27;ll send it, or <a href=\"https://link.remotelatinos.com/widget/bookings/remotelatinos/linkedin-outreach-mkt?email-nurtmaster\" target=\"_blank\" rel=\"noopener\">book 15 minutes here</a> and we&#x27;ll map it together.<br><br>Rooting for your growth,<br>Omer Bloch,<br>CEO, Remote Latinos", "sms": "Hiring hurts for 3 reasons: bad candidates, slow process, wrong hire. All 3 come from no clear system. Want the 3 min test that tells you exactly who to hire first? Reply HIRE.", "auto": "HIRE: Here's your Hire Match Test: https://a-players.remotelatinos.com/lmhirematchtest?sms-nurtmaster It takes 3 minutes and tells you the exact role to hire first. Want help reading your result? Reply YES.", "pain": ["candidates", "time", "badhire"], "lead": "Hire Match Test", "why": "Los 3 dolores comunes al contratar. Ofrece el test. General, para audiencia diversa.", "source": "written", "theme": "The 3 things that make hiring so painful"}, "A3": {"id": "A3", "kind": "week1", "timing": "Día 5", "subject": "A 10/10 hire in under 2 weeks, no resume flood", "preview": "One of our best real estate success stories.", "body": "Hi <span class=\"mf\">{{first_name}}</span>,<br><br>Since I haven&#x27;t heard back, let me show you what this looks like in practice.<br><br>Dupree runs a real estate operation and needed a cold caller who could actually perform. He&#x27;d been burned before by slow hiring and mismatched people, so his bar was high. We put a short list of pre-screened candidates in front of him, not 200 resumes, and he closed a qualifying team member in under 2 weeks, rating the whole thing a 10 out of 10.<br><br>That&#x27;s the entire point of a hiring system: you pick from people who already fit, instead of sorting through noise.<br><br>Want to know which role would do that for you? Our Hire Match Test reads your business and tells you the exact hire to make first, in about 3 minutes. Reply HIRE and I&#x27;ll send it, or tell me the role you&#x27;re considering and I&#x27;ll point you the right way.<br><br>Rooting for your growth,<br>Omer Bloch,<br>CEO, Remote Latinos", "sms": "One client closed a 10/10 hire in under 2 weeks, no resume flood. Want to know your ideal first hire? Our 3 min test tells you. Reply HIRE and I'll send it.", "auto": "HIRE: Here's your Hire Match Test: https://a-players.remotelatinos.com/lmhirematchtest?sms-nurtmaster 3 minutes, tells you the exact role to hire first. Want us to read your result with you? Reply YES.", "pain": ["badhire"], "lead": "Hire Match Test", "why": "Menciona un caso real (no lo entrega) y ofrece el test para saber su hire ideal.", "source": "written", "theme": "A 10/10 hire in under 2 weeks, no resume flood"}, "A4": {"id": "A4", "kind": "week1", "timing": "Día 7", "subject": "Should we just find the right person for you?", "preview": "15 minutes, no pitch, we map the first role to hire.", "body": "Hi <span class=\"mf\">{{first_name}}</span>,<br><br>I&#x27;ll keep this short. Over the last week I&#x27;ve shared how the right hire fixes speed, cost, and bad-hire risk. If any of that is on your plate, the fastest next step is a 15-minute call where we map the first role that would buy back the most of your time, no pitch, no pressure.<br><br><a href=\"https://link.remotelatinos.com/widget/bookings/remotelatinos/linkedin-outreach-mkt?email-nurtmaster\" target=\"_blank\" rel=\"noopener\">Grab a slot here.</a><br><br>Not ready to talk? Take the 60-second <a href=\"https://a-players.remotelatinos.com/lmhirematchtest?email-nurtmaster\" target=\"_blank\" rel=\"noopener\">Hire Match Test</a> and it&#x27;ll tell you which role to hire first, based on your business.<br><br>Either way, I&#x27;m not going anywhere. I&#x27;ll keep sending useful things until the timing is right for you.<br><br>Rooting for your growth,<br>Omer Bloch,<br>CEO, Remote Latinos", "sms": "{{first_name}}, want me to just show you which role to hire first? 60 sec test, or a 15 min call. Reply HIRE for the test or BOOK for the call.", "auto": "HIRE: Here's your Hire Match Test: https://a-players.remotelatinos.com/lmhirematchtest?sms-nurtmaster Want help reading your result? Reply YES.", "pain": ["time"], "lead": "Hire Match Test", "why": "Pedido directo de agenda + salida suave (el test).", "source": "written", "theme": "Should we just find the right person for you?"}, "B1": {"id": "B1", "kind": "week1", "timing": "Día 1", "subject": "We missed you, {{first_name}}, want to grab another time?", "preview": "No worries at all. Life happens. Here's a fresh link.", "body": "Hi <span class=\"mf\">{{first_name}}</span>,<br><br>We had a time booked and didn&#x27;t get to connect, totally fine, it happens to the busiest owners (which is usually a sign you need the help, not that you don&#x27;t).<br><br>I still want to help you map the first hire that would take the most off your plate. It&#x27;s 15 minutes, no pitch. <a href=\"https://link.remotelatinos.com/widget/bookings/remotelatinos/linkedin-outreach-mkt?email-nurtmaster\" target=\"_blank\" rel=\"noopener\">Here&#x27;s a fresh link to pick a new time.</a><br><br>And if something specific got in the way, timing, budget, or you&#x27;re just not sure it&#x27;s the right move, reply and tell me. I&#x27;d rather solve the real thing than chase a calendar slot.<br><br>Rooting for your growth,<br>Omer Bloch,<br>CEO, Remote Latinos", "sms": "Hi {{first_name}}, we missed you on our call, no worries. What's the best way to help: reschedule, or you'd rather I answer a quick question first? Reply RESCHEDULE or ASK.", "auto": "RESCHEDULE: Perfect, grab any time here: https://link.remotelatinos.com/widget/bookings/remotelatinos/linkedin-outreach-mkt?sms-nurtmaster", "pain": ["time"], "lead": "Booking", "why": "Recupera al no-show sin culpa. Reagenda o pregunta qué pasó.", "source": "written", "theme": "We missed you, {{first_name}}, want to grab another time?"}, "B2": {"id": "B2", "kind": "week1", "timing": "Día 3", "subject": "If you're too slammed to talk about hiring…", "preview": "That's exactly the problem worth 15 minutes.", "body": "Hi <span class=\"mf\">{{first_name}}</span>,<br><br>Honest observation: the owners who miss these calls are almost always the ones drowning in day-to-day work. Which is the whole point.<br><br>If you never have time for a 15-minute call, you definitely don&#x27;t have time to source, screen, and interview candidates yourself, and that&#x27;s the trap. The business ends up owning you.<br><br>Here&#x27;s the quick math: take what you want to earn a year, divide by about 2,000 hours. If you value your time at $100 an hour and spend 10 hours a week on admin and follow-up, you&#x27;re handing away about $4,000 a month on work someone else could do.<br><br>Fifteen minutes now can hand a big chunk of that back. <a href=\"https://link.remotelatinos.com/widget/bookings/remotelatinos/linkedin-outreach-mkt?email-nurtmaster\" target=\"_blank\" rel=\"noopener\">Pick a time that actually works.</a><br><br>Rooting for your growth,<br>Omer Bloch,<br>CEO, Remote Latinos", "sms": "The owners who skip these calls are usually the most overloaded, which is exactly what we fix. What's eating most of your week right now? Reply and tell me.", "auto": "", "pain": ["time"], "lead": "Booking", "why": "Reencuadre: \"no tienes tiempo\" ES la razón para venir.", "source": "written", "theme": "If you're too slammed to talk about hiring…"}, "B3": {"id": "B3", "kind": "week1", "timing": "Día 5", "subject": "15 minutes, no pitch, here's what actually happens on the call", "preview": "And a 3 minute test that shows your next hire.", "body": "Hi <span class=\"mf\">{{first_name}}</span>,<br><br>In case the call feels like it&#x27;ll be a sales pitch, it&#x27;s not. Here&#x27;s exactly what we do in 15 minutes: we look at your week, find the one role that would free up the most time or revenue, and tell you what it&#x27;d cost. That&#x27;s it. You leave with a plan whether or not you ever work with us.<br><br>Not ready for a call yet? In just 3 minutes you can find out exactly what your next hire should be. We built a short test that reads your business and tells you the first role to hire. Reply HIRE and I&#x27;ll send it over.<br><br>Rooting for your growth,<br>Omer Bloch,<br>CEO, Remote Latinos", "sms": "Not ready for a call yet? In 3 min our test tells you exactly which hire you need next. Reply HIRE and I'll send it.", "auto": "HIRE: Here's your Hire Match Test: https://a-players.remotelatinos.com/lmhirematchtest?sms-nurtmaster It takes 3 minutes and tells you the exact role to hire first. Want help reading your result? Reply YES.", "pain": ["time"], "lead": "Hire Match Test", "why": "Baja la fricción de la llamada + ofrece el test de 3 min.", "source": "written", "theme": "15 minutes, no pitch, here's what actually happens on the call"}, "B4": {"id": "B4", "kind": "week1", "timing": "Día 7", "subject": "Should I close your file, {{first_name}}?", "preview": "Or grab 15 minutes, your call.", "body": "Hi <span class=\"mf\">{{first_name}}</span>,<br><br>I don&#x27;t want to keep chasing a calendar slot if the timing&#x27;s just not right. So two easy options:<br><br>1. You&#x27;re still interested. <a href=\"https://link.remotelatinos.com/widget/bookings/remotelatinos/linkedin-outreach-mkt?email-nurtmaster\" target=\"_blank\" rel=\"noopener\">Pick any time here</a> and we&#x27;ll map your first hire in 15 minutes.<br>2. Not now. Just reply and tell me your biggest hiring challenge (candidates, cost, time, or retention). I&#x27;ll send you the most useful resource we have for it and check back down the road, no pressure.<br><br>Either way you win. I&#x27;ll keep sending helpful things regardless.<br><br>Rooting for your growth,<br>Omer Bloch,<br>CEO, Remote Latinos", "sms": "{{first_name}}, last one from me for now. Want to grab a time, or should I send a resource for your biggest challenge? Reply CANDIDATES, COST, TIME, or RETENTION, or tell me the challenge.", "auto": "", "pain": ["candidates", "cost", "time", "retention"], "lead": "Booking", "why": "Break-up amable: agenda o dime tu reto (keyword de dolor).", "source": "written", "theme": "Should I close your file, {{first_name}}?"}, "C1": {"id": "C1", "kind": "week1", "timing": "Día 1", "subject": "Thanks for the call, {{first_name}}, a gift to get you ready", "preview": "A 3 minute test that tells you your next hire.", "body": "Hi <span class=\"mf\">{{first_name}}</span>,<br><br>Thanks again for making time for our call. Whether you move forward now or later, I want you to walk away with something useful.<br><br>So here&#x27;s a gift to help you get ready for your next hire: a 3 minute test that reads your business and tells you exactly which role to hire first, and why. It&#x27;s the same thinking we use with clients before we source anyone.<br><br>Reply HIRE and I&#x27;ll send it right over. No pressure, no chase, just something that helps you decide with clarity.<br><br>Rooting for your growth,<br>Omer Bloch,<br>CEO, Remote Latinos", "sms": "Hi {{first_name}}, thanks for the call. Quick gift to prep your next hire: a 3 min test that tells you exactly who to hire first. Reply HIRE and I'll send it.", "auto": "HIRE: Here's your Hire Match Test: https://a-players.remotelatinos.com/lmhirematchtest?sms-nurtmaster 3 minutes, tells you the exact role to hire first. Want us to read your result with you? Reply YES.", "pain": ["badhire", "cost", "time"], "lead": "Hire Match Test", "why": "Gracias por asistir + regalo: el test para preparar su próxima contratación.", "source": "written", "theme": "Thanks for the call, {{first_name}}, a gift to get you ready"}, "C2": {"id": "C2", "kind": "week1", "timing": "Día 3", "subject": "\"What if the hire doesn't work out?\"", "preview": "The 5-point scorecard that makes a bad hire almost impossible.", "body": "Hi <span class=\"mf\">{{first_name}}</span>,<br><br>If part of the hesitation is fear of a bad hire, that&#x27;s the smart thing to worry about, and it&#x27;s exactly what a system removes.<br><br>Great hires aren&#x27;t luck. Score every candidate 1 to 5 on these before you say yes:<br>1. Role clarity. Can you name the top 3 outcomes they own in 90 days?<br>2. Proof of skill. Have they done this specific work, with examples?<br>3. Communication. Are they clear in the language your team uses daily?<br>4. Ownership. Do they follow up without being chased?<br>5. Fit. Do they match your team&#x27;s pace and energy?<br><br>Anyone under a 4 on role clarity or ownership is a pass, no matter how likable. That single filter is the difference between your best hire and a cautionary tale.<br><br>We run this scorecard on every candidate before you ever see them. Want to see how it&#x27;d apply to your role? Reply HIRE and I&#x27;ll send you our Hire Match Test.<br><br>Rooting for your growth,<br>Omer Bloch,<br>CEO, Remote Latinos", "sms": "Worried a hire won't work out? We score every candidate on a 5-point test before you see them. Want the test for your role? Reply HIRE.", "auto": "HIRE: Here's your Hire Match Test: https://a-players.remotelatinos.com/lmhirematchtest?sms-nurtmaster Want us to match you to a vetted profile? Reply YES.", "pain": ["badhire"], "lead": "Hire Match Test", "why": "Objeción mala contratación → scorecard de 5 puntos + test.", "source": "written", "theme": "\"What if the hire doesn't work out?\""}, "C3": {"id": "C3", "kind": "week1", "timing": "Día 5", "subject": "The same role, two very different price tags", "preview": "If cost is the hold-up, look at the real numbers.", "body": "Hi <span class=\"mf\">{{first_name}}</span>,<br><br>If cost is what&#x27;s holding you back, the numbers might actually flip your thinking.<br><br>Typical yearly ranges we see: an SDR runs about $110k in the US vs about $40k in LATAM. A Customer Success Manager about $75k vs $32k. An Executive Assistant about $78k vs $30k. Same skills, same output, same time zone, in English. The difference is geography and cost of living, not quality.<br><br>For most growing companies, that gap is the difference between hiring one role or two this quarter. And keeping payroll in a healthy range (most businesses aim for 15 to 30% of revenue) is often about where the next role sits, not cutting your team.<br><br>Want the exact numbers for your role? Run it through our Salary Calculator, about a minute. Reply CALCULA and I&#x27;ll send it.<br><br>Rooting for your growth,<br>Omer Bloch,<br>CEO, Remote Latinos", "sms": "If cost is the hold-up: same SDR is about $110k in the US vs $40k in LATAM, same output. Want your role priced out? Reply CALCULA.", "auto": "CALCULA: Here's your Salary Calculator: https://a-players.remotelatinos.com/outboundlmcalculator?sms-nurtmaster It compares US vs LATAM for your role in about a minute. Want us to run a specific role for you? Reply YES.", "pain": ["cost"], "lead": "Salary Calculator", "why": "Objeción costo → US vs LATAM + calculadora.", "source": "written", "theme": "The same role, two very different price tags"}, "C4": {"id": "C4", "kind": "week1", "timing": "Día 7", "subject": "No rush, {{first_name}}, the door stays open", "preview": "I'll keep sending useful things until the timing's right.", "body": "Hi <span class=\"mf\">{{first_name}}</span>,<br><br>If now isn&#x27;t the moment, that&#x27;s genuinely okay. The best hires happen when the timing is right, not when someone pushes.<br><br>Here&#x27;s my promise: I&#x27;ll keep sending you useful, no-fluff things, cost breakdowns, salary comparisons, hiring and onboarding checklists, so when you are ready you&#x27;re already set up to hire well. No pressure in between.<br><br>And whenever you want to pick it back up, our team of hiring experts is right here to help you again with whatever you need, they know exactly which role and which person fits your business. <a href=\"https://link.remotelatinos.com/widget/bookings/remotelatinos/linkedin-outreach-mkt?email-nurtmaster\" target=\"_blank\" rel=\"noopener\">Grab a time on my calendar here.</a><br><br>One last thing that&#x27;ll help you now regardless: our <a href=\"https://a-players.remotelatinos.com/lmonboarding?email-nurtmaster\" target=\"_blank\" rel=\"noopener\">30-day onboarding checklist</a>, so your next hire (with us or not) ramps fast.<br><br>Rooting for your growth,<br>Omer Bloch,<br>CEO, Remote Latinos", "sms": "{{first_name}}, no rush at all. I'll keep sending useful stuff and my calendar's open whenever you're ready. Want our onboarding checklist meanwhile? Reply ONBOARD.", "auto": "ONBOARD: Here's your onboarding checklist: https://a-players.remotelatinos.com/lmonboarding?sms-nurtmaster It maps the first 30 days so your hire ramps fast. Want help tailoring it to your role? Reply YES.", "pain": ["retention"], "lead": "Onboarding Checklist", "why": "Puerta abierta + equipo de expertos + checklist. Pasa a nutrición.", "source": "written", "theme": "No rush, {{first_name}}, the door stays open"}, "F1-1": {"id": "F1-1", "kind": "fase1", "timing": "Sem 1", "subject": "Will a remote hire actually care about your business?", "preview": "The honest answer, and how to guarantee it.", "body": "Hi <span class=\"mf\">{{first_name}}</span>,<br><br>It&#x27;s the quiet worry behind most &quot;maybe later&quot; decisions: will someone remote actually care the way I do?<br><br>The honest answer: caring isn&#x27;t about location, it&#x27;s about three things you control, clarity, ownership, and being treated like part of the team. A remote hire with a clear scorecard, real responsibility, and a manager who checks in will out-care a disengaged in-office employee every time.<br><br>The LATAM professionals we place aren&#x27;t gig workers. They&#x27;re building a career with a company that pays a strong, competitive salary in their market, which is exactly why our clients keep people who answer on a Sunday night and stay for years.<br><br>The fastest way to build that in from day one is a simple onboarding plan. Grab our 30-day onboarding checklist, it maps the first month step by step so your hire feels like part of the team fast. Reply ONBOARD and I&#x27;ll send it over.<br><br>Rooting for your growth,<br>Omer Bloch,<br>CEO, Remote Latinos", "sms": "The #1 worry about remote hires is \"will they care?\" It's about clarity and ownership, not location. Want the onboarding checklist that builds it? Reply ONBOARD.", "auto": "ONBOARD: Here's your onboarding checklist: https://a-players.remotelatinos.com/lmonboarding?sms-nurtmaster It maps the first 30 days so your hire ramps fast. Want help tailoring it? Reply YES.", "pain": ["retention"], "lead": "Onboarding Checklist", "why": "Escrito completo.", "source": "written", "theme": "Will a remote hire really care as much?"}, "F1-2": {"id": "F1-2", "kind": "fase1", "timing": "Sem 1", "subject": "The first role you should hire (buy back your time)", "preview": "", "body": "", "sms": "", "auto": "", "pain": ["time"], "lead": "Hire Match Test", "why": "Reutiliza tu email de biblioteca (solo cambia el recurso, no Case Studies).", "source": "lib", "theme": "The first role you should hire (buy back your time)"}, "F1-3": {"id": "F1-3", "kind": "fase1", "timing": "Sem 2", "subject": "Why good hires leave (and the fix is cheaper than replacing them)", "preview": "Retention is built in the first 30 days, not year two.", "body": "Hi <span class=\"mf\">{{first_name}}</span>,<br><br>Replacing a hire can cost more than half their annual salary once you count lost time, re-training, and the gap while the seat is empty. So the cheapest hire is the one you keep.<br><br>Good people rarely leave over money. They leave over three things: no clear path, no feedback, and feeling like an outsider. All three are fixable, and all three are set in the first 30 days:<br>1. Clear targets written down, so they know what winning looks like.<br>2. A weekly 15-minute check-in, so problems surface early, not at exit.<br>3. Real inclusion, in the team channels, the wins, the context.<br><br>Do those and retention stops being luck. Our 30-day onboarding checklist lays out exactly how, day by day. Reply ONBOARD and I&#x27;ll send it.<br><br>Rooting for your growth,<br>Omer Bloch,<br>CEO, Remote Latinos", "sms": "Good hires don't leave over money, they leave over no clear path or feedback. It's set in the first 30 days. Want our onboarding checklist? Reply ONBOARD.", "auto": "ONBOARD: Here's your onboarding checklist: https://a-players.remotelatinos.com/lmonboarding?sms-nurtmaster Want help tailoring it? Reply YES.", "pain": ["retention"], "lead": "Onboarding Checklist", "why": "Escrito completo.", "source": "written", "theme": "Why good remote hires leave, and how to keep them"}, "F1-4": {"id": "F1-4", "kind": "fase1", "timing": "Sem 2", "subject": "Founder as bottleneck: the math on your hours", "preview": "", "body": "", "sms": "", "auto": "", "pain": ["time"], "lead": "Hire Match Test", "why": "Reutiliza tu email de biblioteca (solo cambia el recurso, no Case Studies).", "source": "lib", "theme": "Founder as bottleneck: the math on your hours"}, "F1-5": {"id": "F1-5", "kind": "fase1", "timing": "Sem 3", "subject": "Define \"good\" before you hire (1-page scorecard inside)", "preview": "Most bad hires trace back to a fuzzy job description.", "body": "Hi <span class=\"mf\">{{first_name}}</span>,<br><br>Most hiring pain starts before a single candidate shows up: the role was never clearly defined, so &quot;good&quot; was a moving target.<br><br>Here&#x27;s a 1-page fix. Before you post or interview, write:<br>1. Mission, one sentence on why the role exists.<br>2. Top 3 outcomes for the first 90 days (measurable, not &quot;help out&quot;).<br>3. Must-have skills vs nice-to-haves, be honest which is which.<br>4. A day in the life, the actual tasks, so candidates self-select.<br><br>That single page turns a flood of maybes into a short list of clear yeses. It&#x27;s also what we build with every client before sourcing anyone.<br><br>Not sure how to define your role? Our Hire Match Test does the first draft for you in 3 minutes. Reply HIRE and I&#x27;ll send it.<br><br>Rooting for your growth,<br>Omer Bloch,<br>CEO, Remote Latinos", "sms": "Most bad hires start with a fuzzy job description. Want the 3 min test that tells you the role and what \"good\" looks like? Reply HIRE.", "auto": "HIRE: Here's your Hire Match Test: https://a-players.remotelatinos.com/lmhirematchtest?sms-nurtmaster Want a hand reading it? Reply YES.", "pain": ["candidates"], "lead": "Hire Match Test", "why": "Escrito completo.", "source": "written", "theme": "The 1-page role scorecard"}, "F1-6": {"id": "F1-6", "kind": "fase1", "timing": "Sem 3", "subject": "Don't fear hiring a VA, the 5-point scorecard", "preview": "", "body": "", "sms": "", "auto": "", "pain": ["badhire"], "lead": "Hire Match Test", "why": "Reutiliza tu email de biblioteca (solo cambia el recurso, no Case Studies).", "source": "lib", "theme": "Don't fear hiring a VA, the 5-point scorecard"}, "F1-7": {"id": "F1-7", "kind": "fase1", "timing": "Sem 4", "subject": "How a healthcare group recovered about $41k a month", "preview": "No new marketing. Just faster callbacks.", "body": "Hi <span class=\"mf\">{{first_name}}</span>,<br><br>Sometimes the numbers say it best.<br><br>A healthcare group we work with was quietly losing patients for one boring reason: callbacks were too slow. Leads went cold before anyone reached them. They didn&#x27;t need a bigger ad budget, they needed someone dedicated to responding when it mattered.<br><br>After adding a trained, time-zone-aligned team member to own callbacks, they recovered around $41,000 a month in business that was already theirs to win.<br><br>That&#x27;s the pattern behind almost every result we see: the hidden revenue isn&#x27;t in more leads, it&#x27;s in responding to the ones you already have. Curious which role would plug that gap for you? Our Hire Match Test tells you in 3 minutes. Reply HIRE and I&#x27;ll send it.<br><br>Rooting for your growth,<br>Omer Bloch,<br>CEO, Remote Latinos", "sms": "A healthcare group recovered about $41k a month just by fixing callback speed. Want to know which role would plug your gap? Reply HIRE for the 3 min test.", "auto": "HIRE: Here's your Hire Match Test: https://a-players.remotelatinos.com/lmhirematchtest?sms-nurtmaster Want us to find your leak with you? Reply YES.", "pain": ["cost"], "lead": "Hire Match Test", "why": "Escrito completo.", "source": "written", "theme": "Healthcare group recovered about $41k a month"}, "F1-8": {"id": "F1-8", "kind": "fase1", "timing": "Sem 4", "subject": "The repeatable hiring engine (4 parts)", "preview": "", "body": "", "sms": "", "auto": "", "pain": ["time"], "lead": "Booking", "why": "Reutiliza tu email de biblioteca (solo cambia el recurso, no Case Studies).", "source": "lib", "theme": "The repeatable hiring engine (4 parts)"}, "F1-9": {"id": "F1-9", "kind": "fase1", "timing": "Sem 5", "subject": "From 60% to 94% lead capture (one insurance agency)", "preview": "The gap was the hours nobody was covering.", "body": "Hi <span class=\"mf\">{{first_name}}</span>,<br><br>An insurance agency we work with was capturing about 60% of its leads. The other 40% weren&#x27;t a marketing problem, they were coming in during hours the team simply couldn&#x27;t cover.<br><br>They added remote team members to own those hours. Lead capture jumped to 94%. Same lead flow, same spend, they just stopped letting a third of it fall through the cracks.<br><br>If you&#x27;ve ever wondered how many leads quietly slip away after 5 p.m. or on weekends, that&#x27;s usually the fastest ROI a hire delivers. Want to know which role would cover your gap? Our Hire Match Test tells you in 3 minutes. Reply HIRE and I&#x27;ll send it.<br><br>Rooting for your growth,<br>Omer Bloch,<br>CEO, Remote Latinos", "sms": "An insurance agency went from 60% to 94% lead capture just by covering the hours they were missing. Want to know your gap role? Reply HIRE for the 3 min test.", "auto": "HIRE: Here's your Hire Match Test: https://a-players.remotelatinos.com/lmhirematchtest?sms-nurtmaster Want to estimate your own leak with us? Reply YES.", "pain": ["time"], "lead": "Hire Match Test", "why": "Escrito completo.", "source": "written", "theme": "Insurance agency: lead capture 60% to 94%"}, "F1-10": {"id": "F1-10", "kind": "fase1", "timing": "Sem 5", "subject": "Are you losing leads while you sleep? (speed to lead)", "preview": "", "body": "", "sms": "", "auto": "", "pain": ["time"], "lead": "Hire Match Test", "why": "Reutiliza tu email de biblioteca (solo cambia el recurso, no Case Studies).", "source": "lib", "theme": "Are you losing leads while you sleep? (speed to lead)"}, "F1-11": {"id": "F1-11", "kind": "fase1", "timing": "Sem 6", "subject": "One hire that would change your year", "preview": "No rush, just the highest-leverage move, whenever you're ready.", "body": "Hi <span class=\"mf\">{{first_name}}</span>,<br><br>It&#x27;s been a while, and I&#x27;m still in your corner. So here&#x27;s one useful thought to start the year:<br><br>If you could only make one hire in the next 12 months, the highest-leverage one is almost never the flashy role, it&#x27;s the person who buys back the most of your time, so you can focus on growth. For most owners that&#x27;s an assistant, a lead manager, or a coordinator.<br><br>Not sure which is yours? Our Hire Match Test tells you in 3 minutes, based on your business. Reply HIRE and I&#x27;ll send it. And whenever the timing&#x27;s right, <a href=\"https://link.remotelatinos.com/widget/bookings/remotelatinos/linkedin-outreach-mkt?email-nurtmaster\" target=\"_blank\" rel=\"noopener\">my calendar&#x27;s open</a>.<br><br>Rooting for your growth,<br>Omer Bloch,<br>CEO, Remote Latinos", "sms": "{{first_name}}, still rooting for you. If you could make one hire this year, which role frees the most of your time? Reply HIRE for the 3 min test.", "auto": "HIRE: Here's your Hire Match Test: https://a-players.remotelatinos.com/lmhirematchtest?sms-nurtmaster", "pain": ["cost"], "lead": "Salary Calculator", "why": "Escrito completo.", "source": "written", "theme": "Local vs remote for your next role"}, "F1-12": {"id": "F1-12", "kind": "fase1", "timing": "Sem 6", "subject": "The payroll ratio healthy businesses stay under", "preview": "", "body": "", "sms": "", "auto": "", "pain": ["cost"], "lead": "Salary Calculator", "why": "Reutiliza tu email de biblioteca (solo cambia el recurso, no Case Studies).", "source": "lib", "theme": "The payroll ratio healthy businesses stay under"}, "F1-13": {"id": "F1-13", "kind": "fase1", "timing": "Sem 7", "subject": "2026 salaries: US vs LATAM, role by role", "preview": "", "body": "", "sms": "", "auto": "", "pain": ["cost"], "lead": "Salary Calculator", "why": "Reutiliza tu email de biblioteca (solo cambia el recurso, no Case Studies).", "source": "lib", "theme": "2026 salaries: US vs LATAM, role by role"}, "F1-14": {"id": "F1-14", "kind": "fase1", "timing": "Sem 7", "subject": "A 10/10 real estate hire in under 2 weeks", "preview": "", "body": "", "sms": "", "auto": "", "pain": ["badhire"], "lead": "Hire Match Test", "why": "Reutiliza tu email de biblioteca (solo cambia el recurso, no Case Studies).", "source": "lib", "theme": "A 10/10 real estate hire in under 2 weeks"}, "F1-15": {"id": "F1-15", "kind": "fase1", "timing": "Sem 8", "subject": "The first 30 days decide if a hire performs", "preview": "", "body": "", "sms": "", "auto": "", "pain": ["retention"], "lead": "Onboarding Checklist", "why": "Reutiliza tu email de biblioteca (solo cambia el recurso, no Case Studies).", "source": "lib", "theme": "The first 30 days decide if a hire performs"}, "F1-16": {"id": "F1-16", "kind": "fase1", "timing": "Sem 8", "subject": "Home services: Slack replies on a Sunday, 10pm", "preview": "", "body": "", "sms": "", "auto": "", "pain": ["candidates"], "lead": "Hire Match Test", "why": "Reutiliza tu email de biblioteca (solo cambia el recurso, no Case Studies).", "source": "lib", "theme": "Home services: Slack replies on a Sunday, 10pm"}, "F1-17": {"id": "F1-17", "kind": "fase1", "timing": "Sem 9", "subject": "How to let someone go without your ops breaking", "preview": "", "body": "", "sms": "", "auto": "", "pain": ["retention"], "lead": "Offboarding Checklist", "why": "Reutiliza tu email de biblioteca (solo cambia el recurso, no Case Studies).", "source": "lib", "theme": "How to let someone go without your ops breaking"}, "F1-18": {"id": "F1-18", "kind": "fase1", "timing": "Sem 9", "subject": "The numbers our clients recovered after one hire", "preview": "", "body": "", "sms": "", "auto": "", "pain": ["cost"], "lead": "Salary Calculator", "why": "Reutiliza tu email de biblioteca (solo cambia el recurso, no Case Studies).", "source": "lib", "theme": "The numbers our clients recovered after one hire"}, "F1-19": {"id": "F1-19", "kind": "fase1", "timing": "Sem 10", "subject": "\"But we tried remote and it didn't work\" (objection)", "preview": "", "body": "", "sms": "", "auto": "", "pain": ["badhire"], "lead": "Hire Match Test", "why": "Definido en calendario, por escribir.", "source": "towrite", "theme": "\"But we tried remote and it didn't work\" (objection)"}, "F1-20": {"id": "F1-20", "kind": "fase1", "timing": "Sem 10", "subject": "The hidden cost of the role you haven't filled", "preview": "", "body": "", "sms": "", "auto": "", "pain": ["cost"], "lead": "Booking", "why": "Definido en calendario, por escribir.", "source": "towrite", "theme": "The hidden cost of the role you haven't filled"}, "F1-21": {"id": "F1-21", "kind": "fase1", "timing": "Sem 11", "subject": "3 signs it's time to hire (before you're drowning)", "preview": "", "body": "", "sms": "", "auto": "", "pain": ["time"], "lead": "Hire Match Test", "why": "Definido en calendario, por escribir.", "source": "towrite", "theme": "3 signs it's time to hire (before you're drowning)"}, "F1-22": {"id": "F1-22", "kind": "fase1", "timing": "Sem 11", "subject": "What a great first week looks like", "preview": "", "body": "", "sms": "", "auto": "", "pain": ["retention"], "lead": "Onboarding Checklist", "why": "Definido en calendario, por escribir.", "source": "towrite", "theme": "What a great first week looks like"}, "F1-23": {"id": "F1-23", "kind": "fase1", "timing": "Sem 12", "subject": "4 industries, 4 outcomes (client wins round-up)", "preview": "", "body": "", "sms": "", "auto": "", "pain": ["mixed"], "lead": "Hire Match Test", "why": "Definido en calendario, por escribir.", "source": "towrite", "theme": "4 industries, 4 outcomes (client wins round-up)"}, "F1-24": {"id": "F1-24", "kind": "fase1", "timing": "Sem 12", "subject": "\"Where should I even start?\" then book a 15-min plan", "preview": "", "body": "", "sms": "", "auto": "", "pain": ["mixed"], "lead": "Booking", "why": "Definido en calendario, por escribir.", "source": "towrite", "theme": "\"Where should I even start?\" then book a 15-min plan"}, "F2-Q1": {"id": "F2-Q1", "kind": "fase2", "timing": "F2 · #1", "subject": "The role you keep postponing", "preview": "It's quietly costing more than the salary would.", "body": "Hi <span class=\"mf\">{{first_name}}</span>,<br><br>Quick check-in. Is there a hire you&#x27;ve been meaning to make for a few months now, and keep pushing to &quot;next quarter&quot;?<br><br>Here&#x27;s the part that&#x27;s easy to miss: the empty seat isn&#x27;t free. Every week it stays open, you&#x27;re either doing that work yourself (at your real hourly value) or leaving it undone (at the cost of the growth it would drive). The delay usually costs more than the salary.<br><br>No pressure to move today. But if it&#x27;s been on your list a while, that&#x27;s usually the signal. Whenever you want, we can map it in 15 minutes. <a href=\"https://link.remotelatinos.com/widget/bookings/remotelatinos/linkedin-outreach-mkt?email-nurtmaster\" target=\"_blank\" rel=\"noopener\">Grab a time here.</a><br><br>Rooting for your growth,<br>Omer Bloch,<br>CEO, Remote Latinos", "sms": "{{first_name}}, is there a hire you keep pushing to \"next quarter\"? The empty seat usually costs more than the salary. Want to map it in 15 min? Reply BOOK.", "auto": "BOOK: Grab any time here: https://link.remotelatinos.com/widget/bookings/remotelatinos/linkedin-outreach-mkt?sms-nurtmaster", "pain": ["time"], "lead": "Booking", "why": "Plantilla escrita (molde de Fase 2).", "source": "written", "theme": "Plantilla escrita: el puesto que sigues posponiendo cuesta más que el salario."}, "F2-Q2": {"id": "F2-Q2", "kind": "fase2", "timing": "F2 · #2", "subject": "Quick win: rutina de 5 min que protege tu tiempo.", "preview": "", "body": "", "sms": "", "auto": "", "pain": ["time"], "lead": "Hire Match Test", "why": "Quick win: rutina de 5 min que protege tu tiempo.", "source": "towrite", "theme": "Quick win: rutina de 5 min que protege tu tiempo."}, "F2-Q3": {"id": "F2-Q3", "kind": "fase2", "timing": "F2 · #3", "subject": "Caso RE investor: 2 deals en 2 semanas.", "preview": "", "body": "", "sms": "", "auto": "", "pain": ["candidates"], "lead": "Hire Match Test", "why": "Caso RE investor: 2 deals en 2 semanas.", "source": "towrite", "theme": "Caso RE investor: 2 deals en 2 semanas."}, "F2-Q4": {"id": "F2-Q4", "kind": "fase2", "timing": "F2 · #4", "subject": "Benchmark de ratio de nómina 2026.", "preview": "", "body": "", "sms": "", "auto": "", "pain": ["cost"], "lead": "Salary Calculator", "why": "Benchmark de ratio de nómina 2026.", "source": "towrite", "theme": "Benchmark de ratio de nómina 2026."}, "F2-Q5": {"id": "F2-Q5", "kind": "fase2", "timing": "F2 · #5", "subject": "Las 3 tareas que todo dueño debe delegar primero.", "preview": "", "body": "", "sms": "", "auto": "", "pain": ["time"], "lead": "Hire Match Test", "why": "Las 3 tareas que todo dueño debe delegar primero.", "source": "towrite", "theme": "Las 3 tareas que todo dueño debe delegar primero."}, "F2-Q6": {"id": "F2-Q6", "kind": "fase2", "timing": "F2 · #6", "subject": "Retención: la stay-interview.", "preview": "", "body": "", "sms": "", "auto": "", "pain": ["retention"], "lead": "Onboarding Checklist", "why": "Retención: la stay-interview.", "source": "towrite", "theme": "Retención: la stay-interview."}, "F2-Q7": {"id": "F2-Q7", "kind": "fase2", "timing": "F2 · #7", "subject": "\"¿Cómo manejo a alguien en otro país?\"", "preview": "", "body": "", "sms": "", "auto": "", "pain": ["badhire"], "lead": "Hire Match Test", "why": "\"¿Cómo manejo a alguien en otro país?\"", "source": "towrite", "theme": "\"¿Cómo manejo a alguien en otro país?\""}, "F2-Q8": {"id": "F2-Q8", "kind": "fase2", "timing": "F2 · #8", "subject": "Staffing estacional antes de tu trimestre alto.", "preview": "", "body": "", "sms": "", "auto": "", "pain": ["time"], "lead": "Booking", "why": "Staffing estacional antes de tu trimestre alto.", "source": "towrite", "theme": "Staffing estacional antes de tu trimestre alto."}, "F2-Q9": {"id": "F2-Q9", "kind": "fase2", "timing": "F2 · #9", "subject": "Costo US vs LATAM para 4 roles.", "preview": "", "body": "", "sms": "", "auto": "", "pain": ["cost"], "lead": "Salary Calculator", "why": "Costo US vs LATAM para 4 roles.", "source": "towrite", "theme": "Costo US vs LATAM para 4 roles."}, "F2-Q10": {"id": "F2-Q10", "kind": "fase2", "timing": "F2 · #10", "subject": "Round-up: home services + healthcare.", "preview": "", "body": "", "sms": "", "auto": "", "pain": ["mixed"], "lead": "Hire Match Test", "why": "Round-up: home services + healthcare.", "source": "towrite", "theme": "Round-up: home services + healthcare."}, "F2-Q11": {"id": "F2-Q11", "kind": "fase2", "timing": "F2 · #11", "subject": "La salida limpia: proteger ops.", "preview": "", "body": "", "sms": "", "auto": "", "pain": ["retention"], "lead": "Offboarding Checklist", "why": "La salida limpia: proteger ops.", "source": "towrite", "theme": "La salida limpia: proteger ops."}, "F2-Q12": {"id": "F2-Q12", "kind": "fase2", "timing": "F2 · #12", "subject": "Cierre de año: la contratación que cambia el próximo.", "preview": "", "body": "", "sms": "", "auto": "", "pain": ["cost"], "lead": "Booking", "why": "Cierre de año: la contratación que cambia el próximo.", "source": "towrite", "theme": "Cierre de año: la contratación que cambia el próximo."}, "F2-Q13": {"id": "F2-Q13", "kind": "fase2", "timing": "F2 · #13", "subject": "\"Sigo aquí\": check-in suave + mejor recurso.", "preview": "", "body": "", "sms": "", "auto": "", "pain": ["mixed"], "lead": "Hire Match Test", "why": "\"Sigo aquí\": check-in suave + mejor recurso.", "source": "towrite", "theme": "\"Sigo aquí\": check-in suave + mejor recurso."}, "F3-M13": {"id": "F3-M13", "kind": "fase3", "timing": "Mes 13", "subject": "One hire that would change your year", "preview": "No rush, just the highest-leverage move, whenever you're ready.", "body": "Hi <span class=\"mf\">{{first_name}}</span>,<br><br>It&#x27;s been a while, and I&#x27;m still in your corner. So here&#x27;s one useful thought to start the year:<br><br>If you could only make one hire in the next 12 months, the highest-leverage one is almost never the flashy role, it&#x27;s the person who buys back the most of your time, so you can focus on growth. For most owners that&#x27;s an assistant, a lead manager, or a coordinator.<br><br>Not sure which is yours? Our Hire Match Test tells you in 3 minutes, based on your business. Reply HIRE and I&#x27;ll send it. And whenever the timing&#x27;s right, <a href=\"https://link.remotelatinos.com/widget/bookings/remotelatinos/linkedin-outreach-mkt?email-nurtmaster\" target=\"_blank\" rel=\"noopener\">my calendar&#x27;s open</a>.<br><br>Rooting for your growth,<br>Omer Bloch,<br>CEO, Remote Latinos", "sms": "{{first_name}}, still rooting for you. If you could make one hire this year, which role frees the most of your time? Reply HIRE for the 3 min test.", "auto": "HIRE: Here's your Hire Match Test: https://a-players.remotelatinos.com/lmhirematchtest?sms-nurtmaster", "pain": ["time"], "lead": "Hire Match Test", "why": "Plantilla escrita (molde mensual de Fase 3).", "source": "written", "theme": "Plantilla escrita: la contratación de mayor apalancamiento del año."}, "F3-M14": {"id": "F3-M14", "kind": "fase3", "timing": "Mes 14", "subject": "Rangos de salario 2026-2027 US vs LATAM.", "preview": "", "body": "", "sms": "", "auto": "", "pain": ["cost"], "lead": "Salary Calculator", "why": "Rangos de salario 2026-2027 US vs LATAM.", "source": "towrite", "theme": "Rangos de salario 2026-2027 US vs LATAM."}, "F3-M15": {"id": "F3-M15", "kind": "fase3", "timing": "Mes 15", "subject": "La póliza anti mala-contratación: scorecard 5 puntos.", "preview": "", "body": "", "sms": "", "auto": "", "pain": ["badhire"], "lead": "Hire Match Test", "why": "La póliza anti mala-contratación: scorecard 5 puntos.", "source": "towrite", "theme": "La póliza anti mala-contratación: scorecard 5 puntos."}, "F3-M16": {"id": "F3-M16", "kind": "fase3", "timing": "Mes 16", "subject": "Nuevos client wins (se mencionan, no se adjuntan).", "preview": "", "body": "", "sms": "", "auto": "", "pain": ["mixed"], "lead": "Hire Match Test", "why": "Nuevos client wins (se mencionan, no se adjuntan).", "source": "towrite", "theme": "Nuevos client wins (se mencionan, no se adjuntan)."}, "F3-M17": {"id": "F3-M17", "kind": "fase3", "timing": "Mes 17", "subject": "Push Q2: staffing antes de temporada alta.", "preview": "", "body": "", "sms": "", "auto": "", "pain": ["time"], "lead": "Booking", "why": "Push Q2: staffing antes de temporada alta.", "source": "towrite", "theme": "Push Q2: staffing antes de temporada alta."}, "F3-M18": {"id": "F3-M18", "kind": "fase3", "timing": "Mes 18", "subject": "Refresher de retención: primeros 30 días.", "preview": "", "body": "", "sms": "", "auto": "", "pain": ["retention"], "lead": "Onboarding Checklist", "why": "Refresher de retención: primeros 30 días.", "source": "towrite", "theme": "Refresher de retención: primeros 30 días."}, "F3-M19": {"id": "F3-M19", "kind": "fase3", "timing": "Mes 19", "subject": "Chequeo de ratio de nómina (mitad de año).", "preview": "", "body": "", "sms": "", "auto": "", "pain": ["cost"], "lead": "Salary Calculator", "why": "Chequeo de ratio de nómina (mitad de año).", "source": "towrite", "theme": "Chequeo de ratio de nómina (mitad de año)."}, "F3-M20": {"id": "F3-M20", "kind": "fase3", "timing": "Mes 20", "subject": "Refresher de \"speed to lead\".", "preview": "", "body": "", "sms": "", "auto": "", "pain": ["time"], "lead": "Hire Match Test", "why": "Refresher de \"speed to lead\".", "source": "towrite", "theme": "Refresher de \"speed to lead\"."}, "F3-M21": {"id": "F3-M21", "kind": "fase3", "timing": "Mes 21", "subject": "El checklist de offboarding limpio.", "preview": "", "body": "", "sms": "", "auto": "", "pain": ["retention"], "lead": "Offboarding Checklist", "why": "El checklist de offboarding limpio.", "source": "towrite", "theme": "El checklist de offboarding limpio."}, "F3-M22": {"id": "F3-M22", "kind": "fase3", "timing": "Mes 22", "subject": "Local vs remoto: el framework, revisitado.", "preview": "", "body": "", "sms": "", "auto": "", "pain": ["cost"], "lead": "Salary Calculator", "why": "Local vs remoto: el framework, revisitado.", "source": "towrite", "theme": "Local vs remoto: el framework, revisitado."}, "F3-M23": {"id": "F3-M23", "kind": "fase3", "timing": "Mes 23", "subject": "4 industrias, 4 resultados (round-up).", "preview": "", "body": "", "sms": "", "auto": "", "pain": ["mixed"], "lead": "Hire Match Test", "why": "4 industrias, 4 resultados (round-up).", "source": "towrite", "theme": "4 industrias, 4 resultados (round-up)."}, "F3-M24": {"id": "F3-M24", "kind": "fase3", "timing": "Mes 24", "subject": "2 años: seguimos aquí, seguimos contigo.", "preview": "", "body": "", "sms": "", "auto": "", "pain": ["mixed"], "lead": "Booking", "why": "2 años: seguimos aquí, seguimos contigo.", "source": "towrite", "theme": "2 años: seguimos aquí, seguimos contigo."}};
+const PAINCOL={candidates:'var(--p-candidates)',time:'var(--p-time)',cost:'var(--p-cost)',badhire:'var(--p-badhire)',retention:'var(--p-retention)',mixed:'var(--p-mixed)'};
+const PAINNAME={candidates:'Candidatos',time:'Tiempo',cost:'Costo',badhire:'Mala contratación',retention:'Retención',mixed:'Varios'};
+function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function pdots(pl){return (pl||[]).map(p=>`<span class="pdot" title="${PAINNAME[p]||p}" style="background:${PAINCOL[p]||'#999'}"></span>`).join('');}
+
+/* ---- branches ---- */
+const BR={A:{cls:'ba',name:'Opt-in, sin llamada',state:'Hizo opt-in pero no agendó',tag:'state-optin-nocall'},
+          B:{cls:'bb',name:'No-show',state:'Agendó pero no llegó a la llamada',tag:'state-noshow'},
+          C:{cls:'bc',name:'Asistió, no compró',state:'Estuvo en la llamada, no está listo',tag:'state-attended-nosale'}};
+function shortSubj(s){return s.replace('{{first_name}}','[nombre]');}
+function renderBranches(){
+  let h='';
+  for(const L of ['A','B','C']){
+    const b=BR[L];
+    let cards='';
+    for(const id of [L+'1',L+'2',L+'3',L+'4']){
+      const n=DATA[id]; if(!n)continue;
+      cards+=`<div class="touch chip-node" data-id="${id}" data-pains="${(n.pain||[]).join(',')}" onclick="openNode('${id}')">
+        <span class="day">${esc(n.timing)}</span>
+        <div class="subj">${esc(shortSubj(n.subject))}</div>
+        <div class="line-em"><span class="ic em">✉</span><span>${esc((n.preview||'').slice(0,70))}</span></div>
+        <div class="line-sms"><span class="ic sm">💬</span><span>${esc((n.sms||'').slice(0,72))}…</span></div>
+        <div class="foot">${pdots(n.pain)}<span class="lead">🎁 ${esc(n.lead)}</span></div>
+      </div>`;
+    }
+    h+=`<div class="branch">
+      <h3><span class="bletter ${b.cls}">${L}</span> Rama ${L} · ${esc(b.name)}</h3>
+      <div class="state">${esc(b.state)}</div>
+      <span class="entrytag">🏷️ ${b.tag}</span>
+      ${cards}
+    </div>`;
+  }
+  document.getElementById('branches').innerHTML=h;
+}
+
+/* ---- phases ---- */
+const PH=[
+ {key:'F1',name:'Fase 1 · Mes 1 a 6',cad:'2 emails / semana + 1 SMS / semana',note:'Convergen las 3 ramas. Rota los 5 dolores + objeciones + recursos. Ningún email entrega Case Studies. Semanas 13-26 repiten la rotación (por escribir).',ids:Array.from({length:24},(_,i)=>'F1-'+(i+1))},
+ {key:'F2',name:'Fase 2 · Mes 6 a 12',cad:'2 emails / semana + 1 SMS / semana',note:'Ejes temáticos que se alternan y repiten a 2 emails/semana. Valor + recurso, CTA suave.',ids:['Q1','Q2','Q3','Q4','Q5','Q6','Q7','Q8','Q9','Q10','Q11','Q12','Q13'].map(x=>'F2-'+x)},
+ {key:'F3',name:'Fase 3 · Mes 12–24',cad:'1 email / mes (~12)',note:'Top-of-mind: 1 dolor + 1 recurso + CTA suave. Para que seas la 1ª opción cuando cambie su situación.',ids:['M13','M14','M15','M16','M17','M18','M19','M20','M21','M22','M23','M24'].map(x=>'F3-'+x)},
+];
+const SRCLABEL={written:'Escrito',lib:'Biblioteca',towrite:'Por escribir'};
+function renderPhases(){
+  let h='';
+  for(const p of PH){
+    let chips='';
+    for(const id of p.ids){
+      const n=DATA[id]; if(!n)continue;
+      chips+=`<div class="echip chip-node" data-id="${id}" data-pains="${(n.pain||[]).join(',')}" onclick="openNode('${id}')">
+        <div class="top"><span class="wk">${esc(n.timing)}</span>${pdots(n.pain)}</div>
+        <div class="th">${esc(n.theme||n.subject)}</div>
+        <div class="meta"><span class="lead">🎁 ${esc(n.lead)}</span><span class="src ${n.source}">${SRCLABEL[n.source]}</span></div>
+      </div>`;
+    }
+    h+=`<div class="phase">
+      <div class="ph-h"><span class="name">${esc(p.name)}</span><span class="cad">· ${esc(p.cad)}</span></div>
+      <div class="ph-note">${esc(p.note)}</div>
+      <div class="grid-chips">${chips}</div>
+    </div>`;
+  }
+  document.getElementById('phases').innerHTML=h;
+}
+
+/* ---- objections ---- */
+const OBJ=[
+ ['“¿Y si es una mala contratación?”',[['C2','Rama C · Día 3'],['F1-6','Fase 1 · Sem 6']],'Hire Match Test'],
+ ['“Es muy caro”',[['C3','Rama C · Día 5'],['F1-11','Fase 1 · Sem 11'],['F1-13','Fase 1 · Sem 13']],'Salary Calculator'],
+ ['“No tengo tiempo ahora”',[['B2','Rama B · Día 3'],['A2','Rama A · Día 3']],'Booking'],
+ ['“¿Un remoto sí se compromete?”',[['F1-1','Fase 1 · Sem 1']],'Onboarding Checklist'],
+ ['“Ya probé remoto y no funcionó”',[['F1-19','Fase 1 · Sem 19']],'Hire Match Test'],
+ ['“Mejor lo veo después / no es el momento”',[['C4','Rama C · Día 7'],['F2-Q1','Fase 2']],'Booking'],
+ ['“¿Se van a quedar? (retención)”',[['F1-3','Fase 1 · Sem 3'],['F1-15','Fase 1 · Sem 15']],'Onboarding Checklist'],
+];
+function renderObj(){
+  let h='';
+  for(const [q,refs,res] of OBJ){
+    const links=refs.map(([id,lbl])=>`<span class="link-node" onclick="openNode('${id}')">${esc(lbl)}</span>`).join(' · ');
+    h+=`<tr><td>${esc(q)}</td><td>${links}</td><td>${esc(res)}</td></tr>`;
+  }
+  document.getElementById('objbody').innerHTML=h;
+}
+
+/* ---- drawer ---- */
+const KINDLABEL={week1:'Semana 1',fase1:'Fase 1 (Mes 1–6)',fase2:'Fase 2 (Mes 6–12)',fase3:'Fase 3 (Mes 12–24)'};
+const KINDCOL={week1:'#111827',fase1:'#2563eb',fase2:'#0d9488',fase3:'#7c3aed'};
+function openNode(id){
+  const n=DATA[id]; if(!n)return;
+  document.getElementById('drTag').textContent=(KINDLABEL[n.kind]||'')+' · '+n.timing;
+  document.getElementById('drTag').style.background=KINDCOL[n.kind]||'#333';
+  document.getElementById('drTitle').innerHTML=esc(shortSubj(n.theme||n.subject));
+  document.getElementById('drMeta').innerHTML=(n.pain||[]).map(p=>`<span class="pill" style="border-color:${PAINCOL[p]};color:${PAINCOL[p]}"><span class="pdot" style="background:${PAINCOL[p]}"></span>${PAINNAME[p]}</span>`).join(' ')+` <span class="pill">🎁 ${esc(n.lead)}</span>`;
+  let b='';
+  b+=`<div class="dr-why"><b>¿Por qué este mensaje?</b> ${esc(n.why)}</div>`;
+  if(n.source==='written' && n.body){
+    b+=`<div class="block"><div class="bh em">✉ EMAIL</div><div class="bb2">
+      <div class="label">Asunto</div><div class="subjline">${esc(n.subject).replace('{{first_name}}','<span class=mf>{{first_name}}</span>')}</div>
+      ${n.preview?`<div class="label">Preview</div><div style="margin-bottom:10px;color:#475569">${esc(n.preview)}</div>`:''}
+      <div class="label">Cuerpo</div><div>${n.body}</div>
+    </div></div>`;
+  } else if(n.source==='lib'){
+    b+=`<div class="block"><div class="bh em">✉ EMAIL</div><div class="bb2">
+      <div class="label">Asunto</div><div class="subjline">${esc(n.theme)}</div>
+      <div class="pending">Este email <b>reutiliza tu biblioteca actual</b> (los 12 emails que ya tenías). El copy completo está en la página de Notion. Solo hay que reordenarlo a esta semana.</div>
+    </div></div>`;
+  } else {
+    b+=`<div class="block"><div class="bh em">✉ EMAIL</div><div class="bb2">
+      <div class="label">Tema definido</div><div class="subjline">${esc(n.theme)}</div>
+      <div class="pending">Definido en el calendario (dolor + recurso + CTA). El copy completo se escribe con la plantilla de la fase — pídemelo y lo redacto.</div>
+    </div></div>`;
+  }
+  if(n.sms){
+    b+=`<div class="block"><div class="bh sm">💬 SMS (sin link)</div><div class="bb2">${esc(n.sms).replace('{{first_name}}','<span class=mf>{{first_name}}</span>')}</div></div>`;
+  }
+  if(n.auto){
+    b+=`<div class="block"><div class="bh ar">↩ Auto-reply (al responder la keyword)</div><div class="bb2" style="color:#334155">${esc(n.auto)}</div></div>`;
+  }
+  document.getElementById('drBody').innerHTML=b;
+  document.getElementById('drawer').classList.add('show');
+  document.getElementById('overlay').classList.add('show');
+  document.getElementById('drawer').setAttribute('aria-hidden','false');
+}
+function closeDrawer(){
+  document.getElementById('drawer').classList.remove('show');
+  document.getElementById('overlay').classList.remove('show');
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer();});
+
+/* ---- pain filter ---- */
+document.getElementById('filters').addEventListener('click',e=>{
+  const b=e.target.closest('.fb'); if(!b)return;
+  document.querySelectorAll('.fb').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  const p=b.dataset.p;
+  document.querySelectorAll('.chip-node').forEach(node=>{
+    const pains=(node.dataset.pains||'').split(',');
+    node.classList.toggle('dim', p!=='all' && !pains.includes(p));
+  });
+});
+
+renderBranches();renderPhases();renderObj();
+</script>
+</body>
+</html>
